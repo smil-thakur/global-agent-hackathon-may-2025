@@ -57,6 +57,7 @@ msgpack==1.1.0
 oauthlib==3.2.2
 packaging==24.2
 pbs-installer==2025.4.9
+pillow==11.2.1
 pkginfo==1.12.1.2
 platformdirs==4.3.7
 poetry==2.1.2
@@ -84,8 +85,11 @@ pyobjc-framework-Quartz==11.0
 pyperclip==1.9.0
 pypng==0.20220715.0
 pyproject_hooks==1.2.0
+PyQt5-Qt5==5.15.16
+PyQt5_sip==12.17.0
 PyRect==0.2.0
 PyScreeze==1.0.1
+pystray==0.19.5
 python-dateutil==2.9.0.post0
 python-dotenv==1.1.0
 python-multipart==0.0.20
@@ -100,6 +104,7 @@ requests-toolbelt==1.0.0
 rich==14.0.0
 rsa==4.9.1
 rubicon-objc==0.5.0
+Rx==3.2.0
 screeninfo==0.8.1
 setuptools==79.0.1
 shellingham==1.5.4
@@ -125,5 +130,6 @@ virtualenv==20.30.0
 watchdog==4.0.2
 watchfiles==1.0.5
 websockets==15.0.1
+wrapt==1.17.2
 xattr==1.1.4
 zstandard==0.23.0

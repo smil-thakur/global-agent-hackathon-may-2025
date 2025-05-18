@@ -6,13 +6,10 @@ class OpenApp:
     @staticmethod
     def open(path: str):
         os = platform.system()
-        print("path got to open is", path)
         try:
             if os == "Darwin":
-                print(f"opening {path} in MacOS")
                 subprocess.run(["open", path])
             elif os == "Windows":
-                print(f"opening {path} in Windows")
                 subprocess.Popen(path)
             else:
                 raise Exception(

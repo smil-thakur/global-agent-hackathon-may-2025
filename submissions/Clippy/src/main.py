@@ -1,3 +1,4 @@
+import asyncio
 import flet as ft
 from utilities.debouncer import *
 from utilities.fileUtils import *
@@ -21,7 +22,7 @@ from utilities.checkPermissions import *
 from agents.mainAgent import MainAgent
 from utilities.getResourcePath import get_asset_path
 from rx.subject.behaviorsubject import BehaviorSubject
-from states import thinkingStates
+from states import thinkingStates, focusStates, resultsState
 
 
 def adjust_window_height(mainColumn: ft.Column, page: ft.Page):
@@ -56,7 +57,6 @@ def contains_element(mainColumn: ft.Column, key: str):
 
 
 def debounced_search(query: str, latest_query: dict, page: ft.Page, mainColum: ft.Column):
-    print(query, latest_query["value"])
     if not query.strip():
         remove_control_by_key(
             key="search_result_container", container=mainColum)
@@ -69,8 +69,7 @@ def debounced_search(query: str, latest_query: dict, page: ft.Page, mainColum: f
 
     results = SearchUtils.search_files(query)
     sortedRes = ListSorter.sortListToDict(results)
-
-    print(len(results))
+    resultsState.previousResult = sortedRes
 
     if results:
         remove_control_by_key(
@@ -82,12 +81,13 @@ def debounced_search(query: str, latest_query: dict, page: ft.Page, mainColum: f
             content=results_container
         )
         mainColum.controls.append(result_main_container)
+        adjust_window_height(mainColum, page)
+        setState(page)
     else:
         remove_control_by_key(
             key="search_result_container", container=mainColum)
-
-    adjust_window_height(mainColum, page)
-    page.update()
+        adjust_window_height(mainColum, page)
+        setState(page)
 
 
 def expand_window(e: ft.ControlEvent, debouncer: Debouncer, page: ft.Page, mainColumn: ft.Column):
@@ -100,11 +100,7 @@ def expand_window(e: ft.ControlEvent, debouncer: Debouncer, page: ft.Page, mainC
             key="search_result_container", container=mainColumn)
         remove_control_by_key(mainColumn, "response")
         adjust_window_height(mainColumn, page)
-        debouncer.callback = lambda: debounced_search(
-            query, latest_query, page, mainColumn
-        )
-        debouncer.call()
-        page.update()
+        setState(page)
         return
     else:
         if len(query) > 4:
@@ -114,14 +110,13 @@ def expand_window(e: ft.ControlEvent, debouncer: Debouncer, page: ft.Page, mainC
             debouncer.call()
 
 
-async def searchBarEntered(e: ft.ControlEvent, mainColumn: ft.Column, page: ft.Page):
-    print("prompt entered to clippy:", e.data)
+async def searchBarEntered(e: str, mainColumn: ft.Column, page: ft.Page):
     remove_control_by_key(mainColumn, "response")
     mainColumn.controls.insert(1, AIResponseContainer(
         ft.Text("I am thinking...."), width=page.width, key="response", page=page))
     adjust_window_height(mainColumn, page)
-    page.update()
-    res = await mainAgent.initiateMainAgent(e.data or "")
+    setState(page)
+    res = await mainAgent.initiateMainAgent(e or "")
 
     remove_control_by_key(mainColumn, "response")
     mainColumn.controls.insert(1, AIResponseContainer(
@@ -130,25 +125,82 @@ async def searchBarEntered(e: ft.ControlEvent, mainColumn: ft.Column, page: ft.P
                     extension_set=ft.MarkdownExtensionSet.GITHUB_WEB, code_theme=ft.MarkdownCodeTheme.DARCULA),
         width=page.width, key="response", res=res, page=page))  # type: ignore
     adjust_window_height(mainColumn, page)
+    thinkingStates.Searching = False
+    setState(page)
 
-    page.update()
 
-
-# Load the .env file
-print("env_file_path", )
 keys = dotenv_values(dotenv_path=get_asset_path(".env"))
-# This checks if the file is found
-print("Current working directory:", os.getcwd())
-
-print("File exists:", os.path.exists(get_asset_path(".env")))
-
-print("keys", keys.items())
-
 mainAgent = MainAgent(apiKey=keys["GEMINI_API_KEY"]
                       or "", model="gemini-2.0-flash")
 
 
+def onWindowEvent(event: ft.WindowEvent):
+    if event.type == ft.WindowEventType.FOCUS:
+        return
+    if event.type == ft.WindowEventType.BLUR:
+        return
+
+
+def setState(page: ft.Page):
+    page.update(page)
+
+
+def handleKeyboardEvent(page: ft.Page, event: ft.KeyboardEvent, container: ft.Column):
+    if (event.key == "Enter" and event.shift == True):
+        if focusStates.currentIndex > 0:
+            OpenApp.open(resultsState.resultPaths[focusStates.currentIndex-1])
+    if (event.key == "Enter" and event.shift == False):
+        print("hello")
+        thinkingStates.Searching = True
+        page.run_task(
+            searchBarEntered, componentRef.searchBarRef.current.value or "", container, page)
+
+    if (event.key == "Arrow Up"):
+        if focusStates.currentIndex > 1:
+            focusStates.currentIndex -= 1
+
+            for ref in componentRef.resultContainersRef:
+                for c in ref.current.controls:
+                    if c.key == generateFocusKey(focusStates.currentIndex, "resultSection"):
+                        c.bgcolor = "#263040"
+                    elif c.key != None and "resultSection" in c.key:
+                        c.bgcolor = "#1c2231"
+            setState(page)
+            if (scrollState.scrollReference != None):
+                key = generateFocusKey(
+                    focusStates.currentIndex, "resultSection")
+                scrollState.scrollReference.current.scroll_to(
+                    key=generateFocusKey(focusStates.currentIndex, "resultSection"), duration=200)
+                if focusStates.currentIndex == 1:
+                    scrollState.scrollReference.current.scroll_to(
+                        offset=0, duration=200)
+                setState(page)
+
+    if (event.key == "Arrow Down"):
+        if focusStates.itemIndex > focusStates.currentIndex:
+
+            focusStates.currentIndex += 1
+            if focusStates.currentIndex == 1:
+                scrollState.scrollReference.current.scroll_to(
+                    offset=0, duration=200)
+            for ref in componentRef.resultContainersRef:
+                for c in ref.current.controls:
+                    if c.key == generateFocusKey(focusStates.currentIndex, "resultSection"):
+                        c.bgcolor = "#263040"
+
+                    elif c.key != None and "resultSection" in c.key:
+                        c.bgcolor = "#1c2231"
+            setState(page)
+            if (scrollState.scrollReference != None):
+                key = generateFocusKey(
+                    focusStates.currentIndex, "resultSection")
+                scrollState.scrollReference.current.scroll_to(
+                    key=generateFocusKey(focusStates.currentIndex, "resultSection"), duration=200)
+                setState(page)
+
+
 async def main(page: ft.Page):
+    page.window.on_event = onWindowEvent
     page.window.width = 620
     page.window.max_width = 620
     page.window.min_width = 620
@@ -159,22 +211,16 @@ async def main(page: ft.Page):
     page.window.always_on_top = True
     page.title = f"{100}"
     page.bgcolor = "#1a1f2c"
-    print(page.height)
     debouncer = Debouncer(0, None)
     mainColumn = ft.Column()
-    thinkingStates.currentThinking = BehaviorSubject(False)
+    search_bar_ref = Ref[ft.TextField]()
 
-    thinkingStates.currentThinking.subscribe(
-        lambda value: print("current thinking changed to:", value))
-
-    thinkingStates.currentThinking.on_next(True)
-
-    async def on_submit(e: ft.ControlEvent):
-        await searchBarEntered(e, mainColumn, page)
+    page.on_keyboard_event = lambda event: handleKeyboardEvent(
+        page, event, mainColumn)
 
     search = ft.TextField(
         hint_text="Search something...",
-        on_submit=on_submit,
+        ref=search_bar_ref,
         border_color="#403e43",
         bgcolor="#1d1f2a",
         on_change=lambda e: expand_window(e, debouncer, page, mainColumn),
@@ -183,6 +229,7 @@ async def main(page: ft.Page):
         suffix_icon=ft.Icon(ft.Icons.SEARCH, size=30, color="#9b87f5"),
 
     )
+    componentRef.searchBarRef = search_bar_ref
     mainColumn.controls.append(search)
 
     page.add(mainColumn)

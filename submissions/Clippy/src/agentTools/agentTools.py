@@ -52,7 +52,6 @@ class AgentTools:
             capture_output=True,
             text=True
         )
-        print("result from the command is:", result)
         return result.stdout.strip()
 
     @staticmethod

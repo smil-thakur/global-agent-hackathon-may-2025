@@ -43,9 +43,4 @@ class MainAgent:
 
         )
         res = await router_agent.arun(prompt, session_id=self.sessionId, user_id=self.userId)
-        print("*************************************************************")
-        print(res)
-        print("*************************************************************")
-
-        # print(res.content)
         return str(res.content)

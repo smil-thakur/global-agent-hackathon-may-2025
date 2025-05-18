@@ -39,5 +39,4 @@ class SearchUtils:
             return filtered_results
 
         except Exception as e:
-            print(f"macOS search error: {e}", file=sys.stderr)
             return []

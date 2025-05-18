@@ -14,7 +14,6 @@ class CheckPermission:
                     protected_folder = os.path.expanduser("~/Library/Mail")
                     if os.path.exists(protected_folder):
                         _ = os.listdir(protected_folder)
-                    print("full disk access is granted!")
                     return True
                 except PermissionError:
                     return False
@@ -23,6 +22,5 @@ class CheckPermission:
             else:
                 return False
         if not hasFullAccess():
-            print("Full Disk Access is not granted. Opening Settings...")
             subprocess.run(
                 ["open", "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"])
