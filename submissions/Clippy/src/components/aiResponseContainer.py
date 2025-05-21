@@ -1,5 +1,6 @@
 import flet as ft
 import pyperclip
+from utilities.colors import DARKER_BG_ALT2
 
 
 def AIResponseContainer(content: ft.Control, width: ft.OptionalNumber, key: int, page: ft.Page, res=None) -> ft.Container:
@@ -12,7 +13,7 @@ def AIResponseContainer(content: ft.Control, width: ft.OptionalNumber, key: int,
     return ft.Container(
         key=key,  # type: ignore
         height=250,
-        bgcolor="#212436",
+        bgcolor=DARKER_BG_ALT2,
         width=width,
         border_radius=12,
         border=ft.border.all(width=2, color="#2d314a"),

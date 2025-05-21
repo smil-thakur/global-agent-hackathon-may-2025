@@ -1,4 +1,5 @@
 import asyncio
+from agno.media import File
 import flet as ft
 from utilities.debouncer import *
 from utilities.fileUtils import *
@@ -23,6 +24,10 @@ from agents.mainAgent import MainAgent
 from utilities.getResourcePath import get_asset_path
 from rx.subject.behaviorsubject import BehaviorSubject
 from states import thinkingStates, focusStates, resultsState
+from agents.agentsUtility import AgentsUtility
+from components.summaryPopup import SummaryPopup
+from agents.multiModalAgent import MultiModalAgent
+from utilities.colors import PRIMARY_PURPLE, DARK_BG, DARKER_BG, DARKER_BG_ALT, DARKER_BG_ALT2, DARKER_BG_ALT3, DARKER_BG_ALT4, DARKER_BG_ALT5, BORDER_GREY, TEXT_GREY, BLUE, BLUE_TRANSPARENT, WHITE
 
 
 def adjust_window_height(mainColumn: ft.Column, page: ft.Page):
@@ -113,7 +118,10 @@ def expand_window(e: ft.ControlEvent, debouncer: Debouncer, page: ft.Page, mainC
 async def searchBarEntered(e: str, mainColumn: ft.Column, page: ft.Page):
     remove_control_by_key(mainColumn, "response")
     mainColumn.controls.insert(1, AIResponseContainer(
-        ft.Text("I am thinking...."), width=page.width, key="response", page=page))
+        ft.Row(alignment=ft.MainAxisAlignment.CENTER, controls=[
+            ft.Text("I am thinking...."),
+            ft.ProgressRing(color=PRIMARY_PURPLE)
+        ]), width=page.width, key="response", page=page))
     adjust_window_height(mainColumn, page)
     setState(page)
     res = await mainAgent.initiateMainAgent(e or "")
@@ -125,13 +133,82 @@ async def searchBarEntered(e: str, mainColumn: ft.Column, page: ft.Page):
                     extension_set=ft.MarkdownExtensionSet.GITHUB_WEB, code_theme=ft.MarkdownCodeTheme.DARCULA),
         width=page.width, key="response", res=res, page=page))  # type: ignore
     adjust_window_height(mainColumn, page)
-    thinkingStates.Searching = False
     setState(page)
 
 
 keys = dotenv_values(dotenv_path=get_asset_path(".env"))
 mainAgent = MainAgent(apiKey=keys["GEMINI_API_KEY"]
                       or "", model="gemini-2.0-flash")
+fileSummarizeAgent = AgentsUtility.fileSummarizeAgent(apiKey=keys["GEMINI_API_KEY"]
+                                                      or "", id="gemini-2.0-flash")
+
+# --- MultiModalAgent instance ---
+multiModalAgent = MultiModalAgent.create(
+    apiKey=keys["GEMINI_API_KEY"] or "", model="gemini-2.0-flash")
+
+# --- Summary Popup State ---
+summary_dialog = None
+
+# --- Loading Overlay State ---
+loading_overlay = None
+
+
+def show_loading_overlay(page: ft.Page, message: str = "Summarizing file..."):
+    global loading_overlay
+    loading_overlay = ft.Container(
+        ft.Column([
+            ft.ProgressRing(color=PRIMARY_PURPLE, width=60, height=60),
+            ft.Text(message, color=PRIMARY_PURPLE, size=18)
+        ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+        alignment=ft.alignment.center,
+        bgcolor=DARK_BG,  # solid dark color
+        expand=True,
+        key="loading_overlay",
+        visible=True,
+    )
+    if loading_overlay not in page.overlay:
+        page.overlay.append(loading_overlay)
+    loading_overlay.visible = True
+    page.update()
+
+
+def hide_loading_overlay(page: ft.Page):
+    global loading_overlay
+    if loading_overlay and loading_overlay in page.overlay:
+        loading_overlay.visible = False
+        page.update()
+
+
+def show_summary_popup(page: ft.Page, summary: str, file_path: str = None):
+    global summary_dialog
+
+    def close_popup(e=None):
+        summary_dialog.open = False
+        page.update()
+
+    def open_file_handler(path):
+        from utilities.openApp import OpenApp
+        OpenApp.open(path)
+
+    summary_dialog = SummaryPopup(
+        summary,
+        on_close=close_popup,
+        on_open_file=open_file_handler if file_path else None,
+        file_path=file_path
+    )
+    if summary_dialog not in page.overlay:
+        page.overlay.append(summary_dialog)
+    summary_dialog.open = True
+    page.update()
+
+
+async def summarizeFile(filePath: str, page: ft.Page):
+    show_loading_overlay(page)
+    summary = await multiModalAgent.summarize(filePath)
+    hide_loading_overlay(page)
+    # Show summary.content if present, else show summary
+    summary_text = getattr(summary, "content", summary)
+    show_summary_popup(page, summary_text, file_path=filePath)
 
 
 def onWindowEvent(event: ft.WindowEvent):
@@ -145,58 +222,58 @@ def setState(page: ft.Page):
     page.update(page)
 
 
+def update_focus_and_scroll(direction: str, page: ft.Page):
+    if direction == "up":
+        focusStates.currentIndex -= 1
+    elif direction == "down":
+        focusStates.currentIndex += 1
+
+    for ref in componentRef.resultContainersRef:
+        if ref:
+            for c in ref.current.controls:
+                key = getattr(c, "key", None)
+                if key == generateFocusKey(focusStates.currentIndex, "resultSection"):
+                    if hasattr(c, "bgcolor"):
+                        c.bgcolor = DARKER_BG_ALT5
+                elif key is not None and "resultSection" in key:
+                    if hasattr(c, "bgcolor"):
+                        c.bgcolor = DARKER_BG_ALT3
+    setState(page)
+    if scrollState.scrollReference is not None:
+        key = generateFocusKey(focusStates.currentIndex, "resultSection")
+        scrollState.scrollReference.current.scroll_to(
+            key=key, duration=200)
+        if focusStates.currentIndex == 1:
+            scrollState.scrollReference.current.scroll_to(
+                offset=0, duration=200)
+        setState(page)
+
+
 def handleKeyboardEvent(page: ft.Page, event: ft.KeyboardEvent, container: ft.Column):
-    if (event.key == "Enter" and event.shift == True):
+    if event.key == "Enter" and event.ctrl == True and event.shift == False:
+        page.run_task(
+            summarizeFile, resultsState.resultPaths[focusStates.currentIndex-1], page)
+    if (event.key == "Enter" and event.shift == True and event.ctrl == False):
         if focusStates.currentIndex > 0:
             OpenApp.open(resultsState.resultPaths[focusStates.currentIndex-1])
-    if (event.key == "Enter" and event.shift == False):
-        print("hello")
-        thinkingStates.Searching = True
+    if (event.key == "Enter" and event.shift == False and event.ctrl == False):
         page.run_task(
             searchBarEntered, componentRef.searchBarRef.current.value or "", container, page)
 
     if (event.key == "Arrow Up"):
         if focusStates.currentIndex > 1:
-            focusStates.currentIndex -= 1
-
-            for ref in componentRef.resultContainersRef:
-                for c in ref.current.controls:
-                    if c.key == generateFocusKey(focusStates.currentIndex, "resultSection"):
-                        c.bgcolor = "#263040"
-                    elif c.key != None and "resultSection" in c.key:
-                        c.bgcolor = "#1c2231"
-            setState(page)
-            if (scrollState.scrollReference != None):
-                key = generateFocusKey(
-                    focusStates.currentIndex, "resultSection")
-                scrollState.scrollReference.current.scroll_to(
-                    key=generateFocusKey(focusStates.currentIndex, "resultSection"), duration=200)
-                if focusStates.currentIndex == 1:
-                    scrollState.scrollReference.current.scroll_to(
-                        offset=0, duration=200)
-                setState(page)
+            update_focus_and_scroll("up", page)
 
     if (event.key == "Arrow Down"):
         if focusStates.itemIndex > focusStates.currentIndex:
+            update_focus_and_scroll("down", page)
 
-            focusStates.currentIndex += 1
-            if focusStates.currentIndex == 1:
-                scrollState.scrollReference.current.scroll_to(
-                    offset=0, duration=200)
-            for ref in componentRef.resultContainersRef:
-                for c in ref.current.controls:
-                    if c.key == generateFocusKey(focusStates.currentIndex, "resultSection"):
-                        c.bgcolor = "#263040"
-
-                    elif c.key != None and "resultSection" in c.key:
-                        c.bgcolor = "#1c2231"
-            setState(page)
-            if (scrollState.scrollReference != None):
-                key = generateFocusKey(
-                    focusStates.currentIndex, "resultSection")
-                scrollState.scrollReference.current.scroll_to(
-                    key=generateFocusKey(focusStates.currentIndex, "resultSection"), duration=200)
-                setState(page)
+    # Add Escape key handler for closing summary popup
+    global summary_dialog
+    if event.key == "Escape" and summary_dialog and getattr(summary_dialog, 'open', False):
+        summary_dialog.open = False
+        page.update()
+        return
 
 
 async def main(page: ft.Page):
@@ -210,7 +287,7 @@ async def main(page: ft.Page):
     page.window.frameless = True
     page.window.always_on_top = True
     page.title = f"{100}"
-    page.bgcolor = "#1a1f2c"
+    page.bgcolor = DARKER_BG
     debouncer = Debouncer(0, None)
     mainColumn = ft.Column()
     search_bar_ref = Ref[ft.TextField]()
@@ -221,12 +298,12 @@ async def main(page: ft.Page):
     search = ft.TextField(
         hint_text="Search something...",
         ref=search_bar_ref,
-        border_color="#403e43",
-        bgcolor="#1d1f2a",
+        border_color=BORDER_GREY,
+        bgcolor=DARKER_BG_ALT,
         on_change=lambda e: expand_window(e, debouncer, page, mainColumn),
         border_radius=12,
-        hint_style=ft.TextStyle(color="#9b87f5"),
-        suffix_icon=ft.Icon(ft.Icons.SEARCH, size=30, color="#9b87f5"),
+        hint_style=ft.TextStyle(color=PRIMARY_PURPLE),
+        suffix_icon=ft.Icon(ft.Icons.SEARCH, size=30, color=PRIMARY_PURPLE),
 
     )
     componentRef.searchBarRef = search_bar_ref

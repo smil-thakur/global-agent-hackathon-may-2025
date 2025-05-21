@@ -3,6 +3,7 @@ from utilities.fileUtils import FileUtils
 from states import focusStates, scrollState, componentRef, resultsState
 from flet import Ref
 from utilities.FocusKeyManagement import generateFocusKey
+from utilities.colors import DARKER_BG_ALT3, DARKER_BG_ALT5, DARKER_BG_ALT4
 
 scroll_ref = Ref[ft.ListView]()
 scrollState.scrollReference = scroll_ref
@@ -24,7 +25,7 @@ def resultSection(grouped_path: dict, page: ft.Page):
             file_items.append(
                 ft.Container(
                     key=key,
-                    bgcolor="#1c2231" if focusStates.currentIndex != focusStates.itemIndex else "#263040",
+                    bgcolor=DARKER_BG_ALT3 if focusStates.currentIndex != focusStates.itemIndex else DARKER_BG_ALT5,
                     border=ft.border.all(
                         width=1,
                         color="#374151"
@@ -78,7 +79,7 @@ def resultSection(grouped_path: dict, page: ft.Page):
                 offset=ft.Offset(0, 0),
                 color="#0ea5e933"
             ),
-            bgcolor="#1c2536",
+            bgcolor=DARKER_BG_ALT4,
             border_radius=ft.border_radius.all(12),
             content=ft.Column(
                 spacing=10,
@@ -105,8 +106,6 @@ def resultSection(grouped_path: dict, page: ft.Page):
     return ft.Column(
         expand=True,
         controls=[
-            ft.ElevatedButton(
-                on_click=lambda e: updatingPage(), text="update page"),
             lv
         ]
     )

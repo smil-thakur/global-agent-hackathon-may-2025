@@ -24,13 +24,6 @@ class MainAgent:
             name="Route agent",
             model=Gemini(api_key=self.apiKey, id=self.model),
             mode="route",
-            # instructions=(
-            #     '''You are a routing agent. Based on the user's input, choose the correct tool from the available ones.'''
-            #     '''If the input is a general-purpose query, invoke the general-purpose agent.'''
-            #     '''If it relates to command-line execution or terminal operations, invoke the terminal agent.'''
-            #     '''Use the appropriate tool and return ONLY the tool’s result as your final response.'''
-            #     '''Do NOT alter, summarize, modify, enhance, or reduce the tool output. Just return it exactly as received.'''
-            # ),
             memory=self.memory,
             enable_agentic_memory=True,
             enable_user_memories=True,

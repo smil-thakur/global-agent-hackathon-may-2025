@@ -53,6 +53,23 @@ Clippy's architecture ensures a cohesive and intelligent experience, making it a
 
 ---
 
+## 🖼️ New: Multimodal File Summarization (Ctrl+Enter Magic!)
+
+🚀 **Clippy just got a major upgrade!**
+
+Now, with a simple <kbd>Ctrl</kbd> + <kbd>Enter</kbd> on any file in your search results, you can instantly generate a smart summary—no matter the file type. Whether it's a PDF, image, audio, video, or even a non-standard/binary file, Clippy's new multimodal agent will analyze and summarize it for you in seconds.
+
+- **Universal Summarization:** Summarize PDFs, images, audio, video, and even raw data from non-standard files. If Clippy can't natively parse the file, it will attempt to extract and summarize the raw text content for you.
+- **Popup Power:** The summary appears in a beautiful, scrollable popup—no clutter, just clarity. Instantly open the file from the popup if you want to dive deeper.
+- **Lightning Fast:** Just select a file and hit <kbd>Ctrl</kbd> + <kbd>Enter</kbd>—Clippy does the rest. No menus, no drag-and-drop, just pure productivity.
+- **User-Friendly:** If you try to summarize a directory or an unreadable file, Clippy will let you know with a friendly message—no crashes, no confusion.
+
+🎉 **This is a game-changing feature that every user (and hackathon judge!) will love.**
+
+Give it a try and experience the future of file intelligence—right from your keyboard!
+
+---
+
 ## 🖥️ Why Native Wrapper?
 
 The native wrapper is a crucial part of Clippy's architecture, providing the following benefits:
