@@ -20,16 +20,14 @@
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=D_rcu602wCc" target="_blank" style="text-decoration:none;">
-    <span style="display:inline-block; position:relative; width:600px; height:338px; background:#000; border-radius:12px; box-shadow:0 4px 24px #9b87f5;">
-      <img src="https://img.icons8.com/ios-filled/100/ffffff/play--v1.png" alt="Play" width="100" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); opacity:0.85;" />
-      <span style="position:absolute; bottom:32px; left:0; width:100%; text-align:center; color:#fff; font-size:2rem; font-weight:bold; letter-spacing:2px;">Clippy Demo</span>
-      <span style="display:block; width:100%; height:100%;"></span>
+    <span style="display:inline-block; border:3px solid #9b87f5; border-radius:12px; padding:24px 32px; background:#181c2a; color:#fff; font-size:1.3rem; font-weight:bold; letter-spacing:1px;">
+      🚀 Watch the Clippy Demo on YouTube
     </span>
   </a>
 </p>
 
 <p align="center">
-  <b>👆 Click above to watch Clippy instantly search, summarize, and supercharge your workflow!</b>
+  <b>👆 Click above to see Clippy instantly search, summarize, and supercharge your workflow!</b>
 </p>
 
 ---
