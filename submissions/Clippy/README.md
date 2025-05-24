@@ -30,24 +30,38 @@
   <b>👆 Click above to see Clippy instantly search, summarize, and supercharge your workflow!</b>
 </p>
 
----
-
 ## 🧠 Features
 
-| Feature                       | Description                                                                    |
-| ----------------------------- | ------------------------------------------------------------------------------ |
-| 🔎 **Smart Search**           | Type anything to trigger intelligent file search with instant result sorting.  |
-| 🧠 **Agent Assistant**        | Get AI-powered summaries, quick definitions, or code in seconds.               |
-| 📂 **File Drop**              | Drag and drop a file to get instant AI summarization and indexing.             |
-| 🛠️ **File & App Creation**    | Create files, folders, or even React or Vite apps directly from the interface. |
-| 🌐 **Environment Details**    | Retrieve and display your system's environment details effortlessly.           |
-| 🖥️ **Native UI**              | Fully native desktop UI using Flet — beautiful, frameless, and minimal.        |
-| 🔁 **Debounced Input**        | Performance-optimized search using a custom debouncer utility.                 |
-| 🪄 **Precise Results**        | Responses are short, focused, and designed for quick utility.                  |
-| 🔌 **Cross Platform**         | Runs seamlessly on Windows, macOS, and soon Linux.                             |
-| 🎨 **Animations Coming Soon** | Eye-candy animations and transitions planned with Flet’s animation support.    |
+- 🔎 **Smart Search**  
+  Type anything to trigger intelligent file and app search with instant results.
 
----
+- 🧠 **AI Assistant**  
+  Press `Ctrl + Enter` on a file to get a fast, AI-powered summary.
+
+- 💬 **Universal Input**  
+  Press `Enter` to communicate with the agent — ask questions, get definitions, or perform quick tasks.
+
+- 💻 **Simple Commands**  
+  Use `Enter` to run safe, general-purpose commands like `create react app`, `create file notes.txt`, or `open chrome`.
+
+- 🗂 **Instant Launch**  
+  Press `Shift + Enter` to open files or apps directly from the search.
+
+- 🛠️ **Project Creation**  
+  Instantly scaffold files, folders, or full projects (like Vite/React apps) from the interface.
+
+- 🌐 **Environment Info**  
+  Retrieve and view your system’s environment details instantly.
+
+- 🖥️ **Native UI**  
+  Built with Flet — elegant, minimal, and frameless native desktop experience.
+
+- 🪄 **Focused Results**  
+  Output is concise, relevant, and designed for speed and utility.
+
+- 🔌 **Cross-Platform**  
+  Runs smoothly on Windows, macOS, and soon Linux.
+
 
 ## 🧠 Smart Implementation
 
@@ -252,7 +266,6 @@ These features make Clippy a truly integrated and efficient tool for your deskto
 
 We’re building the next-gen AI-powered Spotlight for your desktop – a hybrid between a blazing-fast search tool and a context-aware assistant. This is just the beginning. In the future, ClippyAI will include:
 
-- 🖼️ **Multi-Modal Agent for Drag-and-Drop File Analysis**: Implement a multi-modal agent capable of analyzing files dropped into the interface. This feature will allow users to extract insights, summaries, or metadata from files such as PDFs, images, or code files. This is the next major feature we are actively working on.
 - 🔊 **TTS Summarization of Documents**: Provide audio summaries of documents for accessibility and convenience.
 - 🧠 **Local Memory for Smarter Interactions**: Enhance context retention for more personalized and efficient responses.
 - 📦 **Plugin Architecture**: Allow users to extend Clippy's functionality with custom plugins.
