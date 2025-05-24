@@ -14,6 +14,19 @@
   <b>✨ Search files instantly • 📁 Summarize files • 💬 Get concise answers • 🤖 Run terminal commands • 🎯 Stunning native UI</b>
 </p>
 
+
+---
+
+## 🎬 See Clippy in Action!
+
+<p align="center">
+  https://www.youtube.com/watch?v=D_rcu602wCc
+</p>
+
+<p align="center">
+  <b>👆 Click the video above to watch Clippy instantly search, summarize, and supercharge your workflow!</b>
+</p>
+
 ---
 
 ## 🧠 Features
