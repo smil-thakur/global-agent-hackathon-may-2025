@@ -14,17 +14,16 @@
   <b>✨ Search files instantly • 📁 Summarize files • 💬 Get concise answers • 🤖 Run terminal commands • 🎯 Stunning native UI</b>
 </p>
 
-
 ---
 
 ## 🎬 See Clippy in Action!
 
 <p align="center">
-  https://www.youtube.com/watch?v=D_rcu602wCc
+  <iframe width="600" height="338" src="https://www.youtube.com/embed/D_rcu602wCc" title="Clippy Demo Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="border-radius:12px; box-shadow:0 4px 24px #9b87f5;"></iframe>
 </p>
 
 <p align="center">
-  <b>👆 Click the video above to watch Clippy instantly search, summarize, and supercharge your workflow!</b>
+  <b>👆 Watch the video above to see Clippy instantly search, summarize, and supercharge your workflow!</b>
 </p>
 
 ---
