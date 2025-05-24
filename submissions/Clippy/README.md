@@ -19,11 +19,17 @@
 ## 🎬 See Clippy in Action!
 
 <p align="center">
-  <iframe width="600" height="338" src="https://www.youtube.com/embed/D_rcu602wCc" title="Clippy Demo Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="border-radius:12px; box-shadow:0 4px 24px #9b87f5;"></iframe>
+  <a href="https://www.youtube.com/watch?v=D_rcu602wCc" target="_blank" style="text-decoration:none;">
+    <span style="display:inline-block; position:relative; width:600px; height:338px; background:#000; border-radius:12px; box-shadow:0 4px 24px #9b87f5;">
+      <img src="https://img.icons8.com/ios-filled/100/ffffff/play--v1.png" alt="Play" width="100" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); opacity:0.85;" />
+      <span style="position:absolute; bottom:32px; left:0; width:100%; text-align:center; color:#fff; font-size:2rem; font-weight:bold; letter-spacing:2px;">Clippy Demo</span>
+      <span style="display:block; width:100%; height:100%;"></span>
+    </span>
+  </a>
 </p>
 
 <p align="center">
-  <b>👆 Watch the video above to see Clippy instantly search, summarize, and supercharge your workflow!</b>
+  <b>👆 Click above to watch Clippy instantly search, summarize, and supercharge your workflow!</b>
 </p>
 
 ---
