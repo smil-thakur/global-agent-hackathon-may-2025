@@ -38,5 +38,9 @@ class ListSorter:
         sorted_categorized = {
             group: categorized[group] for group in preferred_order if categorized[group]
         }
+        
+        # Include misc if it has items
+        if categorized["misc"]:
+            sorted_categorized["misc"] = categorized["misc"]
 
         return sorted_categorized

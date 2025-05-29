@@ -1,6 +1,5 @@
 import flet as ft
-import os
-from utilities.colors import PRIMARY_PURPLE, DARKER_BG_ALT2
+from utilities.colors import DARK_BG, PRIMARY_PURPLE, DARKER_BG_ALT2
 
 
 def SummaryPopup(summary: str, on_close, on_open_file=None, file_path=None, width: int = 500, height: int = 400):
@@ -13,6 +12,7 @@ def SummaryPopup(summary: str, on_close, on_open_file=None, file_path=None, widt
         action_buttons.insert(0, ft.IconButton(icon=ft.Icons.OPEN_IN_NEW, on_click=lambda e: on_open_file(
             file_path), tooltip="Open File", icon_color=PRIMARY_PURPLE))
     return ft.AlertDialog(
+        bgcolor=DARK_BG,
         modal=True,
         title=ft.Row([
             ft.Text("File Summary", style=ft.TextStyle(

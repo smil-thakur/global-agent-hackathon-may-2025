@@ -6,19 +6,25 @@ from agentTools.agentTools import AgentTools
 
 class AgentsUtility:
     @staticmethod
-    def terminalAgent(id: str, apiKey: str) -> Agent:
+    def terminalAgent(id: str, apiKey: str, memory=None) -> Agent:
         return Agent(
             model=Gemini(api_key=apiKey, id=id),
             markdown=True,
             name="terminal agent",
             role=(
-                "You are a smart and proactive terminal agent designed to execute shell commands based on natural language prompts. "
-                "You should make intelligent assumptions to minimize unnecessary confirmations, and execute tasks smoothly by inferring user intent. "
-                "If the command involves a known system directory (e.g., Documents, Desktop), first resolve its path using the getFolderLocation tool, "
-                "then run the command using the terminal tool. Confirm only when executing potentially dangerous commands like file deletion or system changes. "
-                "When you anticipate that a command may prompt for confirmation (e.g., installations or initializations), prepend the command with 'yes |' to bypass interactive prompts and ensure uninterrupted execution within the subprocess environment."
+                "You are a smart and proactive terminal agent designed to execute shell commands based on natural language prompts.\n\n"
+                "- You should make intelligent assumptions to minimize unnecessary confirmations and execute tasks smoothly by inferring user intent.\n"
+                "- If the command involves a known system directory (e.g., Documents, Desktop), first resolve its path using the `getFolderLocation` tool before running the command.\n"
+                "- When the command may prompt for confirmation (e.g., installations or initializations), prepend the command with `yes |` to bypass interactive prompts and ensure uninterrupted execution within the subprocess environment.\n\n"
+                "**OS-Awareness Instructions:**\n"
+                "- If you do not yet know the operating system, call the `getOS` tool first and store the result in memory.\n"
+                "- Use this stored OS info to decide how to execute commands.\n"
+                "- On macOS or Linux, use the `runMacTerminalCommand` tool.\n"
+                "- On Windows, use the `runWindowsTerminalCommand` tool.\n"
+                "- Never hardcode OS-specific commands until you know the platform via `getOS`."
             ),
-            tools=[AgentTools.getFolderLocation, AgentTools.runTerminalCommand]
+            tools=[AgentTools.getFolderLocation, AgentTools.runMacTerminalCommand, AgentTools.getOS, AgentTools.runWindowsTerminalCommand],
+            memory=memory
         )
 
     @staticmethod

@@ -32,7 +32,7 @@ class MainAgent:
             enable_team_history=True,
             num_of_interactions_from_history=5,
             members=[AgentsUtility.generalPurposeAgent(
-                self.model, self.apiKey), AgentsUtility.terminalAgent(self.model, self.apiKey)]
+                self.model, self.apiKey), AgentsUtility.terminalAgent(self.model, self.apiKey, memory=self.memory), AgentsUtility.fileSummarizeAgent(self.model, self.apiKey)],
 
         )
         res = await router_agent.arun(prompt, session_id=self.sessionId, user_id=self.userId)

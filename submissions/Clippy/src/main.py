@@ -1,4 +1,3 @@
-import asyncio
 from agno.media import File
 import flet as ft
 from utilities.debouncer import *
@@ -7,22 +6,12 @@ from utilities.openApp import *
 from utilities.listSorter import *
 from utilities.searchUtils import *
 from components.resultSection import *
-from agno.agent import Agent
-from agno.models.google import Gemini
 from dotenv import dotenv_values
-import os
 from components.aiResponseContainer import *
 from agentTools.agentTools import *
-import multiprocessing
-import time
-from screeninfo import get_monitors
-import pyautogui
-from pynput import keyboard
-import sys
 from utilities.checkPermissions import *
 from agents.mainAgent import MainAgent
 from utilities.getResourcePath import get_asset_path
-from rx.subject.behaviorsubject import BehaviorSubject
 from states import thinkingStates, focusStates, resultsState
 from agents.agentsUtility import AgentsUtility
 from components.summaryPopup import SummaryPopup
@@ -108,7 +97,7 @@ def expand_window(e: ft.ControlEvent, debouncer: Debouncer, page: ft.Page, mainC
         setState(page)
         return
     else:
-        if len(query) > 4:
+        if len(query) > 3:
             debouncer.callback = lambda: debounced_search(
                 query, latest_query, page, mainColumn
             )
@@ -277,6 +266,7 @@ def handleKeyboardEvent(page: ft.Page, event: ft.KeyboardEvent, container: ft.Co
 
 
 async def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
     page.window.on_event = onWindowEvent
     page.window.width = 620
     page.window.max_width = 620
@@ -288,7 +278,7 @@ async def main(page: ft.Page):
     page.window.always_on_top = True
     page.title = f"{100}"
     page.bgcolor = DARKER_BG
-    debouncer = Debouncer(0, None)
+    debouncer = Debouncer(1, None)
     mainColumn = ft.Column()
     search_bar_ref = Ref[ft.TextField]()
 
@@ -302,6 +292,7 @@ async def main(page: ft.Page):
         bgcolor=DARKER_BG_ALT,
         on_change=lambda e: expand_window(e, debouncer, page, mainColumn),
         border_radius=12,
+        color=WHITE,
         hint_style=ft.TextStyle(color=PRIMARY_PURPLE),
         suffix_icon=ft.Icon(ft.Icons.SEARCH, size=30, color=PRIMARY_PURPLE),
 

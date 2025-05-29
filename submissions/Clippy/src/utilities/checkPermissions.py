@@ -6,8 +6,8 @@ import subprocess
 class CheckPermission:
     @staticmethod
     def checkDiskPermission():
+        system = platform.system()
         def hasFullAccess() -> bool:
-            system = platform.system()
 
             if system == "Darwin":
                 try:
@@ -21,6 +21,6 @@ class CheckPermission:
                     return False
             else:
                 return False
-        if not hasFullAccess():
+        if not hasFullAccess() and system == "Darwin":
             subprocess.run(
                 ["open", "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"])

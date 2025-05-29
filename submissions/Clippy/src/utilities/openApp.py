@@ -1,16 +1,17 @@
 import platform
 import subprocess
+import os
 
 
 class OpenApp:
     @staticmethod
     def open(path: str):
-        os = platform.system()
+        os_name = platform.system()
         try:
-            if os == "Darwin":
+            if os_name == "Darwin":
                 subprocess.run(["open", path])
-            elif os == "Windows":
-                subprocess.Popen(path)
+            elif os_name == "Windows":
+                os.startfile(path)
             else:
                 raise Exception(
                     f"Not implemented for {os} operating system WIP")

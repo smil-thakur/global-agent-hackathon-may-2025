@@ -18,7 +18,7 @@ common_extensions_by_group = {
         ".zip", ".rar", ".7z", ".tar", ".gz", ".bz2", ".xz"
     ],
     "Executables": [
-        ".exe", ".app", ".bat", ".sh", ".msi", ".command"
+        ".exe", ".app", ".bat", ".sh", ".msi", ".command", ".lnk"
     ],
     "Code": [
         ".py", ".js", ".ts", ".java", ".c", ".cpp", ".cs",
