@@ -58,7 +58,7 @@
   Output is concise, relevant, and designed for speed and utility.
 
 - 🔌 **Cross-Platform**  
-  Fully supported on Windows with complete agent tools and UI. macOS support coming soon.
+  Fully supported on MacOS and Windows with complete agent tools and UI. Linux support coming soon.
 
 ## 🖥️ Platform Support Status
 
