@@ -1,5 +1,3 @@
-⸻
-
 <p align="center">
   <img src="./src/assets/logo.png" alt="Clippy Logo" width="150">
 </p>
@@ -51,7 +49,7 @@
   Instantly scaffold files, folders, or full projects (like Vite/React apps) from the interface.
 
 - 🌐 **Environment Info**  
-  Retrieve and view your system’s environment details instantly.
+  Retrieve and view your system's environment details instantly.
 
 - 🖥️ **Native UI**  
   Built with Flet — elegant, minimal, and frameless native desktop experience.
@@ -60,8 +58,24 @@
   Output is concise, relevant, and designed for speed and utility.
 
 - 🔌 **Cross-Platform**  
-  Runs smoothly on Windows, macOS, and soon Linux.
+  Fully supported on Windows with complete agent tools and UI. macOS support coming soon.
 
+## 🖥️ Platform Support Status
+
+### ✅ Windows (Fully Supported)
+- ✅ Cover agent tools and UI - **COMPLETE**
+- ✅ File search and indexing - **COMPLETE**
+- ⚠️ Global shortcuts and overlay - **Pending native wrapper**
+- ⚠️ Native wrapper - **Work in Progress**
+
+### ✅ macOS (Fully Functional)
+- ✅ All functionality complete and working
+- ✅ Native wrapper ready - open `MACOS Native/Clippy/Clippy.xcodeproj` and run
+- ⚠️ Cannot provide published apps due to non-premium developer account
+- 🔧 Manual build required (see installation steps below)
+
+### 📋 Linux (Planned)
+- 📋 Support planned for future releases
 
 ## 🧠 Smart Implementation
 
@@ -141,7 +155,15 @@ These features make Clippy a truly integrated and efficient tool for your deskto
 
 ## 🚀 Getting Started
 
-> ⚠️ **Note**: The steps below will not completely set up the project as it is currently under heavy development. The setup process and dependencies are evolving rapidly, and maintaining up-to-date setup documentation is challenging. By the final release, I plan to consolidate all setup steps into a single bash script for ease of use.
+### Prerequisites
+
+**For Windows Users**: 
+Files are not indexed by default in Windows. You'll need to install Everything CLI for enhanced file indexing and searching:
+
+1. Download and install Everything from: https://www.voidtools.com/downloads/
+2. This provides fast file indexing that Clippy leverages for lightning-fast search results
+
+### Installation Steps
 
 1. **Clone this Repo**
 
@@ -154,9 +176,17 @@ These features make Clippy a truly integrated and efficient tool for your deskto
 
    We recommend using a virtual environment:
 
+   **For Windows:**
    ```bash
    python -m venv clippyENV
-   source clippyENV/bin/activate  # or clippyENV\Scripts\activate on Windows
+   clippyENV\Scripts\activate
+   pip install -r requirements-win.txt
+   ```
+
+   **For macOS:**
+   ```bash
+   python -m venv clippyENV
+   source clippyENV/bin/activate
    pip install -r requirements.txt
    ```
 
@@ -173,6 +203,50 @@ These features make Clippy a truly integrated and efficient tool for your deskto
    ```bash
    python src/main.py
    ```
+
+   **Note**: By default, Clippy runs as a web app accessible at `localhost:8550`. To run as a simple desktop app without browser dependency, edit `main.py` and uncomment/comment the last lines as indicated in the code.
+
+### 🏗️ Building Executable
+
+#### Windows
+To create a standalone `.exe` file:
+
+1. **Install PyInstaller**
+   ```bash
+   pip install pyinstaller
+   ```
+
+2. **Build the executable**
+   ```bash
+   pyinstaller Clippy-win.spec
+   ```
+
+3. **Find your executable**
+   - The `.exe` file will be generated in the `dist` folder
+   - Note: The executable uses the default Python icon as it's intended for internal use
+   - The main native wrapper (currently in development) will have the proper Clippy icon
+
+#### macOS
+To create a native macOS app:
+
+1. **Build the Python app**
+   ```bash
+   pip install pyinstaller
+   pyinstaller Clippy-mac.spec
+   ```
+
+2. **Run the native wrapper**
+   - Navigate to `MACOS Native/Clippy/`
+   - Open `Clippy.xcodeproj` in Xcode
+   - Build and run the project
+
+3. **Install the app**
+   - Place the built `.app` file in your Applications folder
+   - The native wrapper provides global shortcuts and overlay functionality
+
+**Note**: Due to non-premium developer account limitations, pre-built apps cannot be distributed. However, all functionality is complete and works when built locally.
+
+> ⚠️ **Development Note**: The setup process is currently under active development. Some dependencies and steps may change as we approach the final release. We plan to consolidate all setup steps into a single script for easier installation.
 
 ---
 
@@ -244,7 +318,10 @@ These features make Clippy a truly integrated and efficient tool for your deskto
     </ul>
   </li>
   <li><strong>memory.db</strong> – Local database for memory</li>
-  <li><strong>requirements.txt</strong> – Python dependencies</li>
+  <li><strong>requirements.txt</strong> – Python dependencies (general)</li>
+  <li><strong>requirements-win.txt</strong> – Windows-specific Python dependencies</li>
+  <li><strong>Clippy-win.spec</strong> – PyInstaller spec file for Windows executable</li>
+  <li><strong>Clippy-mac.spec</strong> – PyInstaller spec file for macOS app</li>
   <li><strong>README.md</strong> – You are here!</li>
   <li><strong>pyproject.toml</strong> – Python project configuration</li>
   <li><strong>pyrightconfig.json</strong> – Pyright type-checking configuration</li>
@@ -264,7 +341,7 @@ These features make Clippy a truly integrated and efficient tool for your deskto
 
 ## 🎯 Vision
 
-We’re building the next-gen AI-powered Spotlight for your desktop – a hybrid between a blazing-fast search tool and a context-aware assistant. This is just the beginning. In the future, ClippyAI will include:
+We're building the next-gen AI-powered Spotlight for your desktop – a hybrid between a blazing-fast search tool and a context-aware assistant. This is just the beginning. In the future, ClippyAI will include:
 
 - 🔊 **TTS Summarization of Documents**: Provide audio summaries of documents for accessibility and convenience.
 - 🧠 **Local Memory for Smarter Interactions**: Enhance context retention for more personalized and efficient responses.
@@ -285,12 +362,13 @@ Open an issue or drop your suggestions.
 
 https://github.com/global-agent-hackathon/global-agent-hackathon-may-2025
 
-This project is being developed as part of the Global Agent Hackathon – May 2025. Let’s build the future of intelligent agents, one utility at a time.
+This project is being developed as part of the Global Agent Hackathon – May 2025. Let's build the future of intelligent agents, one utility at a time.
 
 ---
 
 ## 📬 Contact
 
-Feel free to reach out or connect on GitHub if you’d like to collaborate or contribute!
+Feel free to reach out or connect on GitHub if you'd like to collaborate or contribute!
 
-⸻
+---
+
