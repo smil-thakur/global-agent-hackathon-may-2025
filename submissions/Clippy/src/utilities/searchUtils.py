@@ -74,7 +74,7 @@ class SearchUtils:
                 [es_path, query, "-max-results", str(max_results)],
                 capture_output=True,
                 text=True,
-                shell=False
+                shell=True
             )
             raw_paths = result.stdout.strip().splitlines()
 

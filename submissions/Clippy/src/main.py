@@ -18,6 +18,9 @@ from components.summaryPopup import SummaryPopup
 from agents.multiModalAgent import MultiModalAgent
 from utilities.colors import PRIMARY_PURPLE, DARK_BG, DARKER_BG, DARKER_BG_ALT, DARKER_BG_ALT2, DARKER_BG_ALT3, DARKER_BG_ALT4, DARKER_BG_ALT5, BORDER_GREY, TEXT_GREY, BLUE, BLUE_TRANSPARENT, WHITE
 
+#FOR PYINSTALLER NEW VERSION ERROR FIX ON RUNNING EXE
+import sys
+sys.stdout = open(os.devnull, "w")
 
 def adjust_window_height(mainColumn: ft.Column, page: ft.Page):
     match len(mainColumn.controls):
