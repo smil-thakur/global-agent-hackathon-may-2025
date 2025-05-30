@@ -59,14 +59,16 @@
 
 - 🔌 **Cross-Platform**  
   Fully supported on MacOS and Windows with complete agent tools and UI. Linux support coming soon.
+  
+  > **Update:** Clippy is now available for Windows with a global shortcut (`Ctrl + Space`)! Use the native wrapper for instant access from anywhere. See below for setup instructions.
 
 ## 🖥️ Platform Support Status
 
 ### ✅ Windows (Fully Supported)
 - ✅ Cover agent tools and UI - **COMPLETE**
 - ✅ File search and indexing - **COMPLETE**
-- ⚠️ Global shortcuts and overlay - **Pending native wrapper**
-- ⚠️ Native wrapper - **Work in Progress**
+- ✅ Global shortcut (`Ctrl + Space`) and overlay - **NOW AVAILABLE**
+- ✅ Native wrapper - **Build and use ClippyWindowNative for global shortcut**
 
 ### ✅ macOS (Fully Functional)
 - ✅ All functionality complete and working
@@ -155,6 +157,7 @@ These features make Clippy a truly integrated and efficient tool for your deskto
 
 ## 🚀 Getting Started
 
+
 ### Prerequisites
 
 **For Windows Users**: 
@@ -206,25 +209,28 @@ Files are not indexed by default in Windows. You'll need to install Everything C
 
    **Note**: By default, Clippy runs as a web app accessible at `localhost:8550`. To run as a simple desktop app without browser dependency, edit `main.py` and uncomment/comment the last lines as indicated in the code.
 
+
 ### 🏗️ Building Executable
 
 #### Windows
-To create a standalone `.exe` file:
 
-1. **Install PyInstaller**
+Clippy for Windows now supports a global shortcut (`Ctrl + Space`) using the native wrapper! To use this feature, follow these steps:
+
+1. **Install PyInstaller and build the main Clippy frontend:**
    ```bash
    pip install pyinstaller
-   ```
-
-2. **Build the executable**
-   ```bash
    pyinstaller Clippy-win.spec
    ```
+   This will generate `Clippy.exe` in the `dist` folder. This EXE serves as the main frontend web server that the native wrapper will launch and wrap.
 
-3. **Find your executable**
-   - The `.exe` file will be generated in the `dist` folder
-   - Note: The executable uses the default Python icon as it's intended for internal use
-   - The main native wrapper (currently in development) will have the proper Clippy icon
+2. **Build the native wrapper for global shortcut and overlay:**
+   - Open the `ClippyWindowNative` project in Visual Studio.
+   - Build the project (this creates a native Windows EXE with global shortcut support).
+   - Run the resulting EXE. It will launch Clippy and allow you to trigger it from anywhere using `Ctrl + Space`.
+
+> **Note:** Make sure you have built `Clippy.exe` (step 1) before running the native wrapper, as the wrapper depends on it to serve the Clippy UI.
+
+The native wrapper provides global shortcut and overlay functionality, making Clippy instantly accessible on Windows.
 
 #### macOS
 To create a native macOS app:
