@@ -168,8 +168,8 @@ Files are not indexed by default in Windows. You'll need to install Everything C
 1. **Clone this Repo**
 
    ```bash
-   git clone https://github.com/smil-thakur/Clippy.git
-   cd Clippy
+   git clone https://github.com/smil-thakur/global-agent-hackathon-may-2025.git
+   cd submissions/Clippy
    ```
 
 2. **Install Requirements**
